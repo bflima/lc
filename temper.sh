@@ -16,11 +16,19 @@ ERROR_MSG_LOG="Termomêtro USB não foi detectado"
 MSG_MAIL="Envio de mensagem de alerta por e-mail"
 COUNT=0
 
+clear 
+
+# Testando se tem rede ativa
+if [[ $(ip link show | grep -ic "state up") -eq 0 ]]
+  then
+    echo -e "$(tput bold)$(tput setaf 1)$(tput setab 7)Rede não disponível $(tput sgr0) \n"
+  sleep 5
+fi
+
 # Veririfando se email esta cadastrado
 EMAIL=$(echo "$PASS" | sudo -S "$MYSQL" -u"$USER_BANCO" -p"$USER_SENHA" "$BANCO" -e "select email from email limit 1" | tail -n 1)
 if [[ ${#EMAIL} -eq 0 ]]
   then
-    clear 
     echo -e "$(tput bold)$(tput setaf 1)Email para envio de alerta não cadastrado $(tput sgr0) \n"
     echo "$PASS" | sudo -S "$MYSQL" -u"$USER_BANCO" -p"$USER_SENHA" "$BANCO" -e "insert into envio (tdate, evento, status) values ($(date +%s), '$MSG_MAIL não cadastrado', 'ENVIO DE EMAIL NAO CONFIGURADO');"
     sleep 5
@@ -73,7 +81,7 @@ while true
 
   # Enviar email
   EMAIL=$(echo "$PASS" | sudo -S "$MYSQL" -u"$USER_BANCO" -p"$USER_SENHA" "$BANCO" -e "select email from email limit 1" | tail -n 1)
-  if [[ ${#EMAIL} -ne 0 ]]
+  if [[ ${#EMAIL} -ne 0 ]] && [[ $(ip link show | grep -ic "state up") -ne 0 ]] 
     then
       if (( $(echo "${TEMP//\ *} < $MIN" | bc -l) )) || (( $(echo "${TEMP//\ *} > $MAX" | bc -l) ))
         then
@@ -88,12 +96,3 @@ while true
   # Tempo de atualização
   sleep 45
   done
-
-
-
-# Falta grava no log evento
-
-
-
-#TOKEN=$(echo "$PASS" | sudo -S "$MYSQL" -u"$USER_BANCO" -p"$USER_SENHA" "$BANCO" -e "select token from telegram limit 1" | tail -n 1)
-#if [[ ${#TOKEN} -eq 0 ]] ; then { echo "Erro chave telegram nao cadastrada" ; exit 5 ; fi ; }
