@@ -37,6 +37,9 @@ fi
 # Inserindo temperatura no banco
 echo "$PASS" | sudo -S "$MYSQL" -u"$USER_BANCO" -p"$USER_SENHA" "$BANCO" -e "INSERT INTO temper (tdate, tlocal, temp) VALUES ($(date +%s),'$LOCAL', $TEMPERATURA);"
 
+# Testar se tem rede conectada
+ip link show | grep -iq "state up" || exit 5
+
 # Testar se chave telegram está configurada
 CHAVE=$(echo "$PASS" | sudo -S "$MYSQL" -u"$USER_BANCO" -p"$USER_SENHA" $BANCO -e "select chave_token from token" | tail -n 1)
 if [[ ${#CHAVE} -eq 0 ]]
