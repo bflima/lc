@@ -65,17 +65,17 @@ while true
 
   # Listando informações
   clear
-
+  
   # Realizando os testes
   if (( $(echo "${TEMP//\ *} > $MAX" | bc -l) ))
-    then echo -e "$(tput bold)$(tput setaf 1)$(tput setab 7)Temperatura Atual.: $TEMP $NORNAL \n"
+    then echo -e "$(tput bold)$(tput setaf 1)$(tput setab 7)Temperatura Atual.: ${TEMP//\ *}\n$(cut -d " " -f 2- <<< "$TEMP") $NORNAL \n"
   elif (( $(echo "${TEMP//\ *} < $MIN" | bc -l) ))
-    then echo -e "$(tput bold)$(tput setab 4)Temperatura Atual.: $TEMP $NORNAL \n"
+    then echo -e "$(tput bold)$(tput setab 4)Temperatura Atual.: ${TEMP//\ *}\n$(cut -d " " -f 2- <<< "$TEMP") $NORNAL \n"
   else
-    echo -e "$(tput bold)$(tput setaf 2)Temperatura Atual.: $TEMP \n"
+    echo -e "$(tput bold)$(tput setaf 2)Temperatura Atual.: ${TEMP//\ *}\n$(cut -d " " -f 2- <<< "$TEMP") $NORNAL \n"
   fi
-  echo -e "$(tput bold)$(tput setaf 6)Temperatura Mínima: $TMIN $NORNAL \n"
-  echo -e "$(tput bold)$(tput setaf 1)Temperatura Máxima: $TMAX $NORNAL \n" 
+  echo -e "$(tput bold)$(tput setaf 6)Temperatura Mínima: ${TMIN//\ *} \n$(cut -d " " -f 2- <<< "$TMIN") $NORNAL \n $NORNAL \n"
+  echo -e "$(tput bold)$(tput setaf 1)Temperatura Máxima: ${TMAX//\ *} \n$(cut -d " " -f 2- <<< "$TMAX") $NORNAL \n" 
 
 #TEMP="1.1"
 
