@@ -1,8 +1,0 @@
-# Variaveis acesso banco
-USER_BANCO="root"
-USER_SENHA="admin@123"
-
-# Variaveis
-BANCO="termometro"
-USER="temper2"
-PASS="admin@123"
